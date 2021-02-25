@@ -122,7 +122,6 @@ get(App, Key, Default) when is_tuple(Key) ->
     get(App, tuple_to_list(Key), Default);
 
 get(App, Key, Default) ->
-    %% persistent_term:get({App, Key}, undefined).
     maybe_badarg(persistent_term:get({App, Key}, Default)).
 
 
