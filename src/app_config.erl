@@ -27,6 +27,9 @@
 -define(ERROR, '$error_badarg').
 -define(OPTS_KEY, '$app_config_opts').
 
+
+-type key() :: term().
+
 -export([get/2]).
 -export([get/3]).
 -export([init/1]).
@@ -94,7 +97,7 @@ init(App, #{callback_mod := _} = Opts) ->
 %% @doc
 %% @end
 %% -----------------------------------------------------------------------------
--spec get(App :: atom(), Key :: list() | atom() | tuple()) -> term().
+-spec get(App :: atom(), Key :: key()) -> term().
 
 get(App, Key) ->
     get(App, Key, ?ERROR).
@@ -105,7 +108,7 @@ get(App, Key) ->
 %% @end
 %% -----------------------------------------------------------------------------
 -spec get(
-    App :: atom(), Key :: list() | atom() | tuple(), Default :: term()) ->
+    App :: atom(), Key :: key(), Default :: term()) ->
     term().
 
 get(App, [H|T], Default) ->
@@ -138,9 +141,7 @@ set(App, Key, Value) when is_tuple(Key) ->
 set(_, [], _)  ->
     error(badarg);
 
-set(App, Key, Value)
-when is_atom(App) andalso
-(is_atom(Key) orelse is_binary(Key) orelse is_list(Key)) ->
+set(App, Key, Value) when is_atom(App) ->
     case maybe_will_set(App, Key, Value) of
         ok ->
             ok = do_set(App, Key, Value),
